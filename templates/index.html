@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>GestureVoice Adaptive v10</title><link rel="stylesheet" href="/static/style.css"/></head><body>
+<header class="topbar"><div class="brand-wrap"><div class="brand"><span class="dot"></span>GestureVoice <small>Competition v11</small></div><div class="tag">One reliable movement. A full voice.</div></div><div class="header-actions"><div id="voiceProviderStatus" class="voice-provider-status">Checking ElevenLabs…</div><button type="button" id="presentationToggle" class="presentation-btn">Presentation mode</button><button type="button" class="voice-test-btn" onclick="testElevenLabs()">Test voice</button></div></header>
+<main><section class="pitch-strip"><div><span class="pitch-kicker">ACCESSIBLE COMMUNICATION</span><h1>Turn the movement you can still make into the words you want to say.</h1><p>Personalized computer vision learns one reliable movement, adapts to the user, and unlocks natural speech.</p></div><div class="pitch-metrics"><div><strong>1</strong><span>movement</span></div><div><strong>44</strong><span>phrases</span></div><div><strong>8×</strong><span>calibration</span></div></div></section>
+<section class="modebar card"><button id="directMode" class="mode active">Direct Speech</button><button id="switchMode" class="mode">Switch Board</button><div class="modecopy"><strong id="modeTitle">Direct gesture-to-speech</strong><span id="modeDesc">Best when the user can reliably produce several distinct movements.</span></div></section>
+
+<section id="heroCard" class="hero card"><div class="camera-wrap"><video id="video" autoplay playsinline muted></video><img id="overlay" alt="AI view"/><canvas id="capture" width="640" height="480"></canvas><div id="cameraBadge" class="badge">Starting camera…</div><div id="emergencyBanner" class="emergency-banner">HELP REQUEST DETECTED</div></div>
+<div class="recognition"><div class="eyebrow" id="liveEyebrow">LIVE COMMUNICATION</div><div id="gestureName" class="gesture">Waiting for a gesture</div><div id="confidence" class="confidence">Train your personalized model first.</div><div class="meter"><div id="meterFill"></div></div><div id="spokenPhrase" class="spoken">Your movement becomes speech.</div><div id="chainHint" class="chain-hint">Tip: teach WANT, NEED, CALL, or PLEASE to chain gestures into short phrases.</div><button id="speakToggle" class="secondary">🔊 Speech on</button></div></section>
+
+<section id="switchPanel" class="card switch-panel hidden">
+<div class="switch-head"><div><div class="eyebrow">ONE-MOVEMENT COMMUNICATION</div><h2>Switch Board</h2><p>Choices scan automatically. For the most reliable demo, raise either hand above your shoulder to SELECT.</p></div><div class="switch-config"><label>Select control</label><select id="selectGesture"></select><label class="check tiny-check"><input id="useHandsUpControl" type="checkbox" checked/> Raise hand = SELECT</label><label class="check tiny-check"><input id="useTinyControl" type="checkbox"/> Use auto-discovered tiny control</label><label>Scan speed</label><select id="scanSpeed"><option value="2600">Very relaxed</option><option value="2000" selected>Presentation</option><option value="1600">Faster</option></select></div></div>
+<div id="boardBreadcrumb" class="breadcrumb">HOME</div><div id="phraseBoard" class="phrase-board"></div>
+<div class="switch-foot"><div><strong id="boardStatus">Auto-scan ready.</strong><span>The highlighted tile is the current choice.</span></div><button id="manualSelect" class="secondary">Select highlighted</button><button id="boardBack" class="secondary">← Back</button></div>
+</section>
+
+
+<section class="card judge-mode" id="judgeMode">
+<div class="leverage-head"><div><div class="eyebrow">60-SECOND JUDGE MODE</div><h2>Calibrate. Teach. Speak.</h2><p>Start with one-click REST calibration, then record eight examples of one deliberate gesture. Gesture Quality Coach scores every example before training.</p></div><div class="leverage-kpi"><small>SETUP TARGET</small><strong id="judgeProgress">0 / 3</strong><span id="judgeHint">1. Auto-calibrate REST</span></div></div>
+<div class="judge-actions"><button id="autoRestBtn">1 · Auto-calibrate REST ×8</button><button id="judgeTeachBtn" class="secondary">2 · Auto-record SELECT ×8</button><button id="judgeTrainBtn" class="secondary">3 · Train + enter Switch Board</button></div>
+<div id="judgeStatus" class="small">Sit naturally in frame, then start REST calibration.</div>
+</section>
+<section class="grid">
+<div class="card teach"><div class="eyebrow">TEACH THE SYSTEM</div><h2>Learn my movement</h2><p>Press once, then perform the same gesture eight times. GestureVoice captures all eight examples automatically with a short reset gap between each one. For Switch Board, even one reliable gesture can unlock many phrases.</p><label>Gesture / intent name</label><input id="label" value="SELECT" maxlength="24"/><label>What should it say in Direct mode?</label><input id="phrase" value="Select" maxlength="140"/><label class="check"><input id="emergency" type="checkbox"/> Treat this as an emergency intent</label><button id="recordBtn">Auto-record 8 examples</button><div class="progress"><div id="progressFill"></div></div><div id="recordStatus" class="small">Ready.</div><div id="coachBox" class="coach-box"><small>GESTURE QUALITY COACH</small><strong id="coachScore">Waiting for a sample</strong><span id="coachMessage">Each recording will be checked for strength, consistency, and similarity to other gestures.</span></div><div class="quick"><button data-preset="REST|Rest / no intentional gesture">REST</button><button data-preset="SELECT|Select">SELECT</button><button data-preset="YES|Yes.">YES</button><button data-preset="NO|No.">NO</button><button data-preset="HELP|I need help.|emergency">HELP</button><button data-preset="WATER|Can I have some water, please?">WATER</button><button data-preset="FAMILY|Please call my family.">FAMILY</button><button data-preset="WANT|I want">WANT</button></div></div>
+
+<div class="card model"><div class="eyebrow">PERSONALIZED MODEL</div><h2>What it has learned</h2><div id="sampleList" class="sample-list"></div><button id="trainBtn">Train personalized model</button><div id="trainStatus" class="small">Record at least 3 examples for 2+ gestures.</div><div id="modelBadge" class="model-badge">Not trained</div><div id="qualityBox" class="quality-box"></div></div>
+
+<div class="card history"><div class="eyebrow">COMMUNICATION HISTORY</div><h2>Recent phrases</h2><div id="historyList" class="history-list"><div class="empty">No phrases yet.</div></div></div>
+</section>
+
+
+<section class="card leverage-lab">
+<div class="leverage-head"><div><div class="eyebrow">COMMUNICATION LEVERAGE</div><h2>One movement. A full vocabulary.</h2><p>Switch Board measures how much communication one reliable movement unlocks, automatically adjusts scan timing, and tracks how efficiently phrases are selected.</p></div>
+<div class="leverage-kpi"><small>COMMUNICATION LEVERAGE</small><strong id="phraseCount">20 phrases</strong><span>accessible with one learned SELECT movement</span></div></div>
+<div class="leverage-grid">
+<div class="metric-card"><small>AVERAGE PHRASE TIME</small><strong id="avgPhraseTime">—</strong><span id="phraseTimeHint">Complete a phrase in Switch Board to measure.</span></div>
+<div class="metric-card"><small>SUCCESSFUL PHRASES</small><strong id="successfulPhrases">0</strong><span>this local demo session</span></div>
+<div class="metric-card"><small>SELECTIONS / PHRASE</small><strong id="selectionsPerPhrase">—</strong><span>fewer movements means easier access</span></div>
+<div class="metric-card"><small>ADAPTIVE SCAN</small><strong id="adaptiveScanState">1300 ms</strong><span id="adaptiveScanHint">Learns from your selection timing.</span></div>
+</div>
+<div class="efficiency-actions"><label class="check"><input id="adaptiveScan" type="checkbox" checked/> Automatically adapt scan speed</label><button id="resetEfficiency" class="secondary">Reset efficiency metrics</button></div>
+</section>
+
+<section class="card movement-lab">
+<div class="movement-head"><div><div class="eyebrow">TINY-MOVEMENT AUTO DISCOVERY</div><h2>Show me the movement you still control.</h2><p>Record rest, then repeat any small comfortable movement three times. GestureVoice searches head, wrist, elbow, and shoulder signals, learns the cleanest personalized threshold, and can use it directly as the Switch Board SELECT input.</p></div><div id="tinyRecommendation" class="recommendation"><small>AUTO-DISCOVERED CONTROL</small><strong>Not discovered yet</strong><span>3× NEUTRAL + 3× DISCOVER</span></div></div>
+<div class="tiny-steps"><div><b>1</b><span>Record NEUTRAL 3×</span></div><div><b>2</b><span>Record DISCOVER 3× while making the same tiny movement</span></div><div><b>3</b><span>Discover + enable it as SELECT</span></div></div>
+<div class="tiny-actions"><button id="tinyNeutralBtn">Record NEUTRAL</button><button id="tinyDiscoverBtn">Record DISCOVER</button><button id="tinyAnalyzeBtn">Discover my best tiny control</button><button id="tinyEnableBtn" class="secondary" disabled>Use as Switch SELECT</button></div>
+<div class="tiny-live"><div><small>LIVE TINY SIGNAL</small><strong id="tinyLiveName">Waiting for calibration</strong><span id="tinyLiveDetail">The live meter will show how close your movement is to the personalized trigger.</span></div><div class="tiny-meter"><i id="tinyLiveBar"></i></div></div>
+<div id="tinyRanking" class="movement-results"></div>
+<hr class="soft-rule"/>
+<div class="movement-head compact"><div><div class="eyebrow">ADVANCED CALIBRATION</div><h3>Movement Reliability Lab</h3><p>Optional: compare multiple named candidate movements and rank reliability versus effort.</p></div><div id="movementRecommendation" class="recommendation"><small>BEST NAMED CONTROL</small><strong>Not analyzed yet</strong><span>Record 3+ NEUTRAL examples and 3+ examples of each candidate.</span></div></div>
+<div class="movement-grid">
+<div>
+<label>Candidate movement</label><input id="movementLabel" value="NEUTRAL" maxlength="24"/>
+<div class="quick movement-presets"><button data-move="NEUTRAL">NEUTRAL</button><button data-move="HEAD_TILT">HEAD TILT</button><button data-move="WRIST_FLICK">WRIST FLICK</button><button data-move="SHOULDER_LIFT">SHOULDER</button><button data-move="HAND_RAISE">HAND RAISE</button></div>
+<button id="movementRecordBtn">Record one movement sample</button>
+<div class="progress"><div id="movementProgress"></div></div><div id="movementStatus" class="small">Start with NEUTRAL: sit comfortably and remain still.</div>
+<div class="lab-actions"><button id="movementAnalyzeBtn">Analyze best movement</button><button id="movementResetBtn" class="secondary">Reset movement lab</button></div>
+</div>
+<div><div id="movementCounts" class="sample-list"><div class="empty">No movement calibration samples yet.</div></div><div id="movementResults" class="movement-results"></div></div>
+</div>
+</section>
+
+<section class="card drift-lab">
+<div class="drift-head"><div><div class="eyebrow">ADAPTIVE DRIFT MODEL</div><h2>Your movement can change. Your voice should not.</h2><p>GestureVoice compares each live gesture with that user's own training baseline. When the movement becomes consistently smaller, it adapts temporal stability and ambiguity requirements while preserving the 50% confidence floor.</p></div><div id="driftState" class="drift-state"><small>ADAPTATION STATUS</small><strong>Waiting for a recognized gesture</strong><span>Train gestures, then repeat one with progressively smaller movement.</span></div></div>
+<div class="drift-grid">
+<div class="drift-gauge"><div class="ring"><strong id="strengthPercent">100%</strong><span>movement retained</span></div><div class="drift-copy"><b id="driftGesture">No gesture yet</b><span id="driftDetail">Baseline will be learned from your recorded gesture examples.</span></div></div>
+<div><div class="drift-bars"><label>Training baseline</label><div class="drift-track"><i id="baselineBar" style="width:100%"></i></div><label>Current recognized movement</label><div class="drift-track current"><i id="currentBar" style="width:0%"></i></div></div><div id="driftHistory" class="drift-history"><div class="empty">No adaptive observations yet.</div></div></div>
+</div>
+<div class="drift-actions"><button id="driftResetBtn" class="secondary">Reset drift observations</button><span>Tip for the demo: train a large gesture, then intentionally repeat it smaller while keeping the same intent.</span></div>
+</section>
+
+
+<section class="card leverage-lab" id="reliabilityLab">
+<div class="leverage-head"><div><div class="eyebrow">RELIABILITY EDITION</div><h2>Teach the system what <em>not</em> to say.</h2><p>v10 learns an explicit REST/NONE class, suppresses landmark jitter, gates the GRU until there is enough data, and warns when two gestures are too similar.</p></div><div class="leverage-kpi"><small>TRAINING QUALITY</small><strong id="reliabilityScore">—</strong><span id="reliabilityHint">Train the personalized model to score reliability.</span></div></div>
+<div class="leverage-grid">
+<div class="metric-card"><small>REST / NONE EXAMPLES</small><strong id="restExamples">0 / 8</strong><span>reduces accidental speech</span></div>
+<div class="metric-card"><small>MIN GESTURE EXAMPLES</small><strong id="minGestureExamples">0 / 8</strong><span>8 recommended per intent</span></div>
+<div class="metric-card"><small>STABILITY WINDOW</small><strong id="stabilityWindow">6 votes</strong><span>same intent must persist</span></div>
+<div class="metric-card"><small>GRU POLICY</small><strong id="gruPolicy">Gated</strong><span>enabled only with enough temporal data</span></div>
+</div>
+<div id="reliabilityWarnings" class="movement-results"><div class="empty">No reliability warnings yet.</div></div>
+</section>
+
+<section class="card leverage-lab" id="fusionLab">
+<div class="leverage-head"><div><div class="eyebrow">MULTI-SIGNAL NEURAL RECOGNITION</div><h2>Several movement signals agree before GestureVoice speaks.</h2><p>v10 fuses the personalized Random Forest, an interpretable kinematic signature, and an optional causal GRU trained on the full 18-frame gesture sequence.</p></div><div class="leverage-kpi"><small>FUSION STATE</small><strong id="fusionState">Waiting for movement</strong><span id="fusionBackend">RF + kinematics</span></div></div>
+<div class="leverage-grid">
+<div class="metric-card"><small>PERSONALIZED RF</small><strong id="fusionRF">—</strong><span>body + hand summary evidence</span></div>
+<div class="metric-card"><small>KINEMATICS</small><strong id="fusionKin">—</strong><span>trajectory, speed, acceleration & angles</span></div>
+<div class="metric-card"><small>CAUSAL GRU</small><strong id="fusionGRU">—</strong><span id="gruStatus">optional neural temporal model</span></div>
+<div class="metric-card"><small>FUSED CONFIDENCE</small><strong id="fusionFinal">—</strong><span>50% speech floor preserved</span></div>
+</div>
+<div class="leverage-grid">
+<div class="metric-card"><small>HEAD RANGE</small><strong id="kinHead">—</strong><span>degrees during current gesture window</span></div>
+<div class="metric-card"><small>PEAK WRIST SPEED</small><strong id="kinSpeed">—</strong><span>body-normalized units / frame</span></div>
+<div class="metric-card"><small>SMOOTHNESS</small><strong id="kinSmooth">—</strong><span>higher means less movement jerk</span></div>
+<div class="metric-card"><small>POSE BACKEND</small><strong id="poseBackend">MediaPipe Pose</strong><span>YOLO11s Pose primary</span></div>
+</div>
+</section>
+
+<section class="card technical"><div><div class="eyebrow">WHY THIS IS DIFFERENT</div><h2>One movement can unlock a full vocabulary</h2></div><div class="pipeline"><span>Webcam</span><b>→</b><span id="yoloxPill">YOLO11s-pose</span><b>→</b><span id="posePipeline">Pose + hands</span><b>→</b><span>Kinematics + causal GRU</span><b>→</b><span>Multi-channel fusion</span><b>→</b><span>Personalized movement model</span><b>→</b><span>Tiny-control discovery</span><b>→</b><span>Direct speech OR switch access</span><b>→</b><span>Voice</span></div><button id="resetBtn" class="danger">Reset demo data</button></section>
+</main><script src="/static/app.js"></script></body></html>
